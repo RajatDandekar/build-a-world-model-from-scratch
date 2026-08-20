@@ -37,7 +37,7 @@ while we built it (and plenty did), the failure and the fix are part of the lect
 | 0 | **Series Introduction** | [slides](lecture-00-series-introduction/lecture-00.pdf) | Why world models, the Renderer/Simulator/Planner map of the field, and where this series goes |
 | 1 | **What Is a World Model, Really?** | [slides](lecture-01-what-is-a-world-model/lecture-01.pdf) · [code](lecture-01-what-is-a-world-model/code) | The agent–environment loop, why **state ≠ observation**, 80 years of the idea, and the taxonomy |
 | 2 | **The World Modeler's Toolkit** | [slides](lecture-02-the-world-modelers-toolkit/lecture-02.pdf) | The four tools every world model stands on: latent spaces, reward over time, value, actor-critic |
-| 3 | **Your First World Model** | [slides](lecture-03-your-first-world-model/lecture-03.pdf) · [notebook](lecture-03-your-first-world-model/pong_worldmodel.ipynb) · [code](lecture-03-your-first-world-model/code) | Build a complete world model on MiniPong: encoder + memory + prediction, then run it as the game |
+| 3 | **Your First World Model** | [slides](lecture-03-your-first-world-model/lecture-03.pdf) · [notebook](lecture-03-your-first-world-model/pong_worldmodel.ipynb) · [code](lecture-03-your-first-world-model/code) · [VAE companion lecture](https://www.youtube.com/watch?v=VUwAGLM6K_8) | Build a complete world model on MiniPong: encoder + memory + prediction, then run it as the game |
 
 More lectures are on the way — the compounding-error problem that Lecture 3 ends on is exactly
 where the story continues (latents built *for* prediction, and eventually agents trained inside
@@ -84,6 +84,10 @@ design idea of every world model since.
 <p align="center">
   <img src="assets/fig_encoder.png" alt="Network V: the frame squeezed into a 12-number code and redrawn from it" width="80%">
 </p>
+
+> 🎥 **Go deeper on the encoder:** Network V is built on the variational autoencoder idea. For the
+> full treatment — the intuition, the math, and a from-scratch implementation — watch Vizuara's
+> dedicated lecture: [**Variational Autoencoder (VAE) from scratch | Intuition + Coding**](https://www.youtube.com/watch?v=VUwAGLM6K_8).
 
 **Network M — memory + prediction.** A single frame shows *where* the ball is, never *where it
 is going* — velocity lives only in the difference between frames. So M carries a **memory h
