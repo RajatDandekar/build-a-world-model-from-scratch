@@ -162,6 +162,12 @@ plt.tight_layout(); plt.savefig("plot_env_frames.png", dpi=150, bbox_inches="tig
 # central design idea of Ha & Schmidhuber's 2018 *World Models* paper, and of every
 # world model since.
 #
+# > 🎥 **Want the full depth on this idea?** Network V is built on the variational
+# > autoencoder. Vizuara has a dedicated from-scratch lecture on it — intuition, math,
+# > and coding: [Variational Autoencoder (VAE) from scratch | Intuition +
+# > Coding](https://www.youtube.com/watch?v=VUwAGLM6K_8). This notebook uses a lean
+# > variant of the same machinery, tuned for what a world model needs.
+#
 # **The architecture, in one breath:** two convolution layers scan the image for local
 # shapes (a glowing blob, a teal bar) and shrink it 32→16→8; a linear layer maps the
 # result to the 12-number code; the decoder mirrors the same path in reverse, ending in
