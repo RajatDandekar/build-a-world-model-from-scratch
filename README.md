@@ -38,6 +38,7 @@ while we built it (and plenty did), the failure and the fix are part of the lect
 | 1 | **What Is a World Model, Really?** | [slides](lecture-01-what-is-a-world-model/lecture-01.pdf) · [code](lecture-01-what-is-a-world-model/code) | The agent–environment loop, why **state ≠ observation**, 80 years of the idea, and the taxonomy |
 | 2 | **The World Modeler's Toolkit** | [slides](lecture-02-the-world-modelers-toolkit/lecture-02.pdf) | The four tools every world model stands on: latent spaces, reward over time, value, actor-critic |
 | 3 | **Your First World Model** | [slides](lecture-03-your-first-world-model/lecture-03.pdf) · [notebook](lecture-03-your-first-world-model/pong_worldmodel.ipynb) · [code](lecture-03-your-first-world-model/code) · [VAE companion lecture](https://www.youtube.com/watch?v=VUwAGLM6K_8) | Build a complete world model on MiniPong: encoder + memory + prediction, then run it as the game |
+| 4 | **Dreams That Last — the RSSM** | [slides](lecture-04-dreams-that-last/lecture-04.pdf) · [notebook](lecture-04-dreams-that-last/rssm_so101.ipynb) · [code](lecture-04-dreams-that-last/code) | Build an RSSM on **real SO-101 robot data**: track a belief, carry a memory and a doubt, and dream 60 steps with the camera off |
 
 More lectures are on the way — the compounding-error problem that Lecture 3 ends on is exactly
 where the story continues (latents built *for* prediction, and eventually agents trained inside
