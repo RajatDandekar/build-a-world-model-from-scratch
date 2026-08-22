@@ -110,6 +110,12 @@ it**. Why the contact spike is missing is open — either the forks live in a fe
 average washes out, or 50 episodes of a reliably successful grasp contain little to be unsure
 about. Both are testable; see the notebook's exercises.
 
+## The build log
+
+[**NOTES.md**](NOTES.md) is the honest version of this page: every dead end in the order we hit
+it, the two Modal traps that cost us a training run, the metric that nearly fooled us, and the
+result we expected but could not measure.
+
 ## Reproducing it
 
 The notebook runs on a free Colab and downloads everything it needs (a 12-episode data subset and
@@ -130,10 +136,10 @@ triggered function alive — wrap a multi-stage job in one function.
 ## Files
 
 ```
-lecture-04.pdf            the 62-slide deck as taught
+lecture-04.pdf            the 70-slide deck as taught
 rssm_so101.ipynb          the guided Colab companion
 code/rssm_so101.py        the notebook's source (percent format)
 code/modal_*.py           training, ablation, and figure generation
 data/                     12-episode subset + the trained checkpoint
-assets/                   every figure in the lecture
+assets/                   every figure in the lecture, plus film.mp4
 ```
