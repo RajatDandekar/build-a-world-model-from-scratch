@@ -41,34 +41,31 @@ Each lecture folder holds its slides, its runnable code, and a README with the f
 | 2 | **The World Modeler's Toolkit** | [slides](lecture-02-the-world-modelers-toolkit/lecture-02.pdf) | The four tools every world model stands on: latent spaces, reward over time, value, actor-critic |
 | 3 | **Your First World Model** | [**write-up**](lecture-03-your-first-world-model) · [slides](lecture-03-your-first-world-model/lecture-03.pdf) · [notebook](lecture-03-your-first-world-model/pong_worldmodel.ipynb) | Build a complete world model on MiniPong: encoder + memory + prediction, then run it as the game |
 | 4 | **Dreams That Last — the RSSM** | [**write-up**](lecture-04-dreams-that-last) · [slides](lecture-04-dreams-that-last/lecture-04.pdf) · [notebook](lecture-04-dreams-that-last/rssm_so101.ipynb) | Build an RSSM on **real SO-101 robot data**: track a belief, carry a memory and a doubt, dream 60 steps with the camera off |
+| 5 | **A Vector, or a Vocabulary? — IRIS** | [**write-up**](lecture-05-a-vector-or-a-vocabulary) · [slides](lecture-05-a-vector-or-a-vocabulary/lecture-05.pdf) · [**play with it**](lecture-05-a-vector-or-a-vocabulary/simulator) | Discrete latents and transformers: give a world model a **vocabulary** instead of a vector, then open the transformer and trace one word through every layer |
 
-More on the way — next, an agent that learns to *act* entirely inside the dream.
+More on the way — next, whether a world model needs to draw pixels at all.
 
 ---
 
-## Latest result — Lecture 4
+## Latest result — Lecture 5
 
-Lecture 3 built a world model whose dream dissolved after a handful of steps. Lecture 4 fixes it,
-on real robot data. Given five frames of context and then **nothing but the joint commands**, the
-model imagines two full seconds of an SO-101 pick-and-place it has never seen:
+Two world models, the same game, the same data, the same wall-clock. One carries **32 continuous
+numbers**; the other carries **16 words** drawn from a 512-word vocabulary it invented for itself:
 
 <p align="center">
-  <img src="lecture-04-dreams-that-last/assets/fig_joint_curves.png" alt="Dreamed joint angles tracking the real robot for 60 open-loop steps" width="90%">
+  <img src="lecture-05-a-vector-or-a-vocabulary/assets/fig_vocabulary.png" alt="All 512 visual words the model invented for CoinRun" width="95%">
 </p>
 
-The idea is the **RSSM**: one state with two halves — a deterministic memory `h` that is never
-sampled (facts live here) and a stochastic `s` sampled every step (doubt lives here). We built all
-three designs to check the claim, at matched parameter counts:
+Nobody labelled any of those squares. The model learned them from raw frames, and a whole 64×64
+frame is rebuilt from just **16 of them** (held-out MSE 0.00081).
 
-| design | pixel error @60 | **joint error @60** |
-|---|---|---|
-| deterministic only | 0.0106 | 0.409 |
-| stochastic only | 0.0155 | 2.598 |
-| **both — the RSSM** | **0.0050** | **0.009** |
+Then the lecture opens the transformer and traces one real forward pass through every layer. The
+vector at the sampling position always has 256 numbers — but its similarity to the word it started
+as falls **1.00 → 0.20** on the way up. It stops being a word and becomes a summary of the whole
+window. That is what people mean by "the context vector".
 
-**45× better than deterministic-only, 288× better than stochastic-only.** And a linear probe of the
-memory recovers **99.9% of every joint angle** — the state literally carries the arm.
-[Full write-up →](lecture-04-dreams-that-last)
+And you can **[steer the dream yourself](lecture-05-a-vector-or-a-vocabulary/simulator)** — 3,279
+real rollouts, both models, running offline from a single HTML file.
 
 ---
 

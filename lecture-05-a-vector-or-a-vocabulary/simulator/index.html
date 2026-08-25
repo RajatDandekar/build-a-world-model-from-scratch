@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dream Simulator · Build a World Model from Scratch, Lecture 5</title>
+<style>
+  :root{
+    --paper:#FCFBF7; --panel:#FFFFFF; --ink:#16130D; --ink2:#3A352B;
+    --muted:#6D665A; --faint:#A49C8C; --line:#E4DFD2;
+    --teal:#2E8F8F; --gold:#DD9F3E; --clay:#C96442;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--paper); color:var(--ink);
+       font-family:"Source Serif 4",Georgia,serif; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1500px; margin:0 auto; padding:1.6rem 2rem 2.5rem}
+  .dots{display:inline-flex; gap:.42rem; vertical-align:middle}
+  .dots i{width:.6rem; height:.6rem; border-radius:50%; display:block}
+  .dots i:nth-child(1){background:var(--teal)}
+  .dots i:nth-child(2){background:var(--gold)}
+  .dots i:nth-child(3){background:var(--clay)}
+  .eyebrow{font:500 .68rem/1 ui-monospace,"JetBrains Mono",monospace;
+           letter-spacing:.2em; text-transform:uppercase; color:var(--muted);
+           display:flex; align-items:center; gap:.7rem}
+  h1{font-size:2.1rem; margin:.7rem 0 .3rem; letter-spacing:-.02em; font-weight:600}
+  .sub{color:var(--ink2); max-width:78ch; line-height:1.5; margin:0 0 1.3rem}
+  .stage{display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.4rem}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px;
+        padding:.9rem .9rem 1rem; box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .card h2{margin:.1rem 0 .1rem; font-size:1.05rem; font-weight:600}
+  .card .who{font:500 .64rem/1 ui-monospace,monospace; letter-spacing:.16em;
+             text-transform:uppercase; color:var(--muted)}
+  canvas{width:100%; aspect-ratio:1; image-rendering:pixelated; border-radius:8px;
+         background:#111; display:block; margin:.6rem 0 .5rem}
+  .note{font-size:.8rem; color:var(--muted); line-height:1.4; min-height:2.6em}
+  .bar{display:flex; flex-wrap:wrap; gap:.7rem; align-items:center; margin:1.5rem 0 .4rem}
+  button{font-family:inherit; font-size:1rem; font-weight:600; padding:.62rem 1.25rem;
+         border-radius:10px; border:1px solid var(--line); background:var(--panel);
+         color:var(--ink); cursor:pointer; transition:.12s}
+  button:hover:not(:disabled){border-color:var(--clay); color:var(--clay)}
+  button:disabled{opacity:.35; cursor:not-allowed}
+  button.go{background:var(--clay); color:#fff; border-color:var(--clay)}
+  button.go:hover:not(:disabled){filter:brightness(1.08); color:#fff}
+  .key{font:500 .7rem ui-monospace,monospace; color:var(--faint); margin-left:.35rem}
+  .trail{font:500 .78rem ui-monospace,monospace; color:var(--ink2);
+         background:#F6F4EC; border:1px solid var(--line); border-radius:8px;
+         padding:.55rem .8rem; margin-top:.9rem; min-height:2.3em; word-break:break-all}
+  .toks{display:grid; grid-template-columns:repeat(4,1fr); gap:3px; margin-top:.5rem}
+  .toks span{font:500 .68rem ui-monospace,monospace; text-align:center; padding:.22rem 0;
+             background:#F7E7DF; color:#A94F31; border-radius:4px}
+  .alts{display:grid; grid-template-columns:repeat(3,1fr); gap:1rem}
+  .alt{text-align:center}
+  .alt canvas{margin:.35rem 0 .3rem}
+  .alt .lab{font:600 .78rem ui-monospace,monospace; letter-spacing:.1em; color:var(--muted)}
+  .alt.chosen .lab{color:var(--clay)}
+  .alt.chosen canvas{outline:3px solid var(--clay); outline-offset:2px}
+  .foot{margin-top:2rem; padding-top:1rem; border-top:1px solid var(--line);
+        font-size:.8rem; color:var(--muted); line-height:1.55}
+  .warn{color:var(--clay); font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow"><span class="dots"><i></i><i></i><i></i></span>
+       Build a World Model from Scratch · Lecture 5</div>
+  <h1>Steer the dream</h1>
+  <p class="sub">Both world models watched the same eight real frames of CoinRun, and then the
+  screen was switched off. Every frame from here on is <b>imagined</b> — press an action and
+  watch each model predict what happens next. Neither has ever seen this level.</p>
+
+  <div class="stage">
+    <div class="card">
+      <div class="who">the last real frame</div>
+      <h2>Ground truth stops here</h2>
+      <canvas id="c_real" width="64" height="64"></canvas>
+      <div class="note">After the context, there is nothing to compare against — the models
+        are on their own.</div>
+    </div>
+    <div class="card">
+      <div class="who" style="color:var(--teal)">Model A · RSSM</div>
+      <h2>A vector</h2>
+      <canvas id="c_rssm" width="64" height="64"></canvas>
+      <div class="note">32 continuous numbers carried by a GRU. Watch it go soft as it
+        becomes unsure.</div>
+    </div>
+    <div class="card">
+      <div class="who" style="color:var(--clay)">Model B · IRIS</div>
+      <h2>A vocabulary</h2>
+      <canvas id="c_iris" width="64" height="64"></canvas>
+      <div class="note">16 words from a 512-word codebook, written one at a time by a
+        transformer. These are the actual tokens:</div>
+      <div class="toks" id="toks"></div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button class="go" data-a="LEFT">← Left<span class="key">←</span></button>
+    <button class="go" data-a="RIGHT">Right →<span class="key">→</span></button>
+    <button class="go" data-a="JUMP">Jump<span class="key">space</span></button>
+    <button id="undo">Undo<span class="key">backspace</span></button>
+    <button id="reset">Reset<span class="key">r</span></button>
+    <span id="status" style="color:var(--muted); margin-left:.6rem"></span>
+  </div>
+  <div class="trail" id="trail">no actions yet — both models are still holding the real context</div>
+
+  <div class="card" style="margin-top:1.4rem">
+    <div class="who">the road not taken</div>
+    <h2 style="margin-bottom:.15rem">What the other actions would have imagined</h2>
+    <p class="note" style="min-height:0; margin:.15rem 0 .8rem">Same context, same model — only the
+      action differs. After one step these are nearly identical; keep going and they separate.</p>
+    <div id="alts" class="alts"></div>
+    <div class="note" id="diverge" style="margin-top:.7rem"></div>
+  </div>
+
+  <div class="foot">
+    <b>What this is.</b> A pre-computed tree of <span id="nnodes"></span> genuine rollouts from the
+    trained networks — every action you can press was actually run through both models on a GPU,
+    and the frames are their real output. Nothing here is replayed from the game after the context
+    ends. Depth <span id="ndepth"></span>.<br>
+    <span class="warn">Runs entirely offline.</span> Two files: <code>tree.json</code> and
+    <code>sprites.jpg</code>. Open this page from disk — no server, no network.
+  </div>
+</div>
+
+<script>
+const S = {tree:null, sheet:null, path:[], ready:false};
+const $ = s => document.querySelector(s);
+
+function draw(canvasId, frameIdx){
+  const c = $(canvasId), ctx = c.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  if(frameIdx == null){ ctx.fillStyle = '#111'; ctx.fillRect(0,0,64,64); return; }
+  const cols = S.tree.cols;
+  const sx = (frameIdx % cols) * 64, sy = Math.floor(frameIdx / cols) * 64;
+  ctx.drawImage(S.sheet, sx, sy, 64, 64, 0, 0, 64, 64);
+}
+
+function render(){
+  const ctxIds = S.tree.context;
+  draw('#c_real', ctxIds[ctxIds.length - 1]);
+  if(S.path.length === 0){
+    const last = ctxIds[ctxIds.length - 1];
+    draw('#c_rssm', last); draw('#c_iris', last);
+    $('#trail').textContent =
+      'no actions yet — both models are still holding the real context';
+    $('#toks').innerHTML = '';
+  } else {
+    const node = S.tree.index[S.path.join('/')];
+    draw('#c_rssm', node.rssm); draw('#c_iris', node.iris);
+    $('#trail').textContent = S.path.join('  →  ');
+    $('#toks').innerHTML = node.tokens.map(t => `<span>${t}</span>`).join('');
+  }
+  // the alternatives at THIS step, from the same parent
+  const parent = S.path.slice(0, -1);
+  const alts = $('#alts');
+  if(S.path.length === 0 || S.path.length > S.tree.depth){
+    alts.innerHTML = '<div class="note" style="grid-column:1/-1">' +
+      'press an action to see the branches you did not take</div>';
+    $('#diverge').textContent = '';
+  } else {
+    alts.innerHTML = S.tree.actions.map(a => {
+      const chosen = a === S.path[S.path.length - 1];
+      return `<div class="alt${chosen ? ' chosen' : ''}">
+        <canvas id="alt_${a}" width="64" height="64"></canvas>
+        <div class="lab">${a}${chosen ? ' ✓' : ''}</div></div>`;
+    }).join('');
+    const toks = [];
+    S.tree.actions.forEach(a => {
+      const node = S.tree.index[parent.concat([a]).join('/')];
+      draw('#alt_' + a, node.iris);
+      toks.push(node.tokens);
+    });
+    let d = 0, pairs = 0;
+    for(let i = 0; i < toks.length; i++)
+      for(let j = i + 1; j < toks.length; j++){
+        pairs++;
+        for(let k = 0; k < 16; k++) if(toks[i][k] !== toks[j][k]) d++;
+      }
+    const avg = (d / pairs).toFixed(1);
+    $('#diverge').innerHTML =
+      `At this step the three actions differ in <b>${avg} of the 16 tokens</b>. ` +
+      (S.path.length < 3
+        ? 'One step of player movement is smaller than a 16×16-pixel patch, so it often '
+          + 'does not change which word wins. Keep pressing — by step 3 it is most of them.'
+        : 'The choice you made several steps ago is now written all over the frame.');
+  }
+
+  const atMax = S.path.length >= S.tree.depth;
+  document.querySelectorAll('button[data-a]').forEach(b => b.disabled = atMax);
+  $('#undo').disabled = S.path.length === 0;
+  $('#status').textContent = atMax
+    ? `step ${S.path.length} of ${S.tree.depth} — end of the pre-computed tree`
+    : `imagined step ${S.path.length} of up to ${S.tree.depth}`;
+}
+
+function act(a){
+  if(!S.ready || S.path.length >= S.tree.depth) return;
+  S.path.push(a); render();
+}
+
+document.querySelectorAll('button[data-a]').forEach(b =>
+  b.addEventListener('click', () => act(b.dataset.a)));
+$('#undo').addEventListener('click', () => { S.path.pop(); render(); });
+$('#reset').addEventListener('click', () => { S.path = []; render(); });
+addEventListener('keydown', e => {
+  const k = e.key;
+  if(k === 'ArrowLeft')  { act('LEFT');  e.preventDefault(); }
+  if(k === 'ArrowRight') { act('RIGHT'); e.preventDefault(); }
+  if(k === ' ')          { act('JUMP');  e.preventDefault(); }
+  if(k === 'Backspace')  { S.path.pop(); render(); e.preventDefault(); }
+  if(k === 'r' || k === 'R') { S.path = []; render(); }
+});
+
+(async function(){
+  S.tree = await (await fetch('tree.json')).json();
+  $('#nnodes').textContent = Object.keys(S.tree.index).length.toLocaleString();
+  $('#ndepth').textContent = S.tree.depth;
+  const img = new Image();
+  img.onload = () => { S.sheet = img; S.ready = true; render(); };
+  img.src = 'sprites.jpg';
+})();
+</script>
+</body>
+</html>
