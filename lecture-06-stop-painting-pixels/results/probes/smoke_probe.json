@@ -1,0 +1,10 @@
+{
+  "ckpt": "/results/smoke_ijepa/ckpt_final.pt",
+  "dataset": "stl10",
+  "random_init": false,
+  "linear_10pct": 0.320250004529953,
+  "knn": 0.2955,
+  "feat_dim": 384,
+  "n_train": 5000,
+  "n_test": 8000
+}

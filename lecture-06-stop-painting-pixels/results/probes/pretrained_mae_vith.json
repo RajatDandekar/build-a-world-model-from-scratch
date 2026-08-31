@@ -1,0 +1,9 @@
+{
+  "model": "mae_vith",
+  "dataset": "in100",
+  "linear_100pct": 0.8657999634742737,
+  "linear_10pct": 0.817799985408783,
+  "linear_1pct": 0.5841999650001526,
+  "knn": 0.3072,
+  "feat_dim": 1280
+}

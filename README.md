@@ -42,57 +42,28 @@ Each lecture folder holds its slides, its runnable code, and a README with the f
 | 3 | **Your First World Model** | [**write-up**](lecture-03-your-first-world-model) · [slides](lecture-03-your-first-world-model/lecture-03.pdf) · [notebook](lecture-03-your-first-world-model/pong_worldmodel.ipynb) | Build a complete world model on MiniPong: encoder + memory + prediction, then run it as the game |
 | 4 | **Dreams That Last — the RSSM** | [**write-up**](lecture-04-dreams-that-last) · [slides](lecture-04-dreams-that-last/lecture-04.pdf) · [notebook](lecture-04-dreams-that-last/rssm_so101.ipynb) | Build an RSSM on **real SO-101 robot data**: track a belief, carry a memory and a doubt, dream 60 steps with the camera off |
 | 5 | **A Vector, or a Vocabulary? — IRIS** | [**write-up**](lecture-05-a-vector-or-a-vocabulary) · [slides](lecture-05-a-vector-or-a-vocabulary/lecture-05.pdf) · [**play with it**](lecture-05-a-vector-or-a-vocabulary/simulator) | Discrete latents and transformers: give a world model a **vocabulary** instead of a vector, then open the transformer and trace one word through every layer |
+| 6a | **The World Model in Your Head** | [**write-up**](lecture-06a-the-world-model-in-your-head) · [slides](lecture-06a-the-world-model-in-your-head/lecture-06a.pdf) | LeCun's blueprint, made runnable: what an **energy landscape** is, and the measured contours that show why predicting in representation space wins |
+| 6 | **Stop Painting Pixels — I-JEPA** | [**write-up**](lecture-06-stop-painting-pixels) · [slides](lecture-06-stop-painting-pixels/lecture-06.pdf) · [code](lecture-06-stop-painting-pixels/code) | Build I-JEPA's ideas from scratch, watch **representation collapse** happen on purpose, and replicate the ImageNet study — including at 1% of labels |
 
-More on the way — next, whether a world model needs to draw pixels at all.
+More on the way — next, world models that predict the future without rendering it (V-JEPA, DINO-WM).
 
 ---
 
-## Latest result — Lecture 5
+## Latest result — Lecture 6
 
-Two world models, the same game, the same data, the same wall-clock. One carries **32 continuous
-numbers**; the other carries **16 words** drawn from a 512-word vocabulary it invented for itself:
+Five encoders, identical training data, one exam: score how "surprised" each model is by
+candidate answers to *what is behind the mask?* — the true content, or content from a different
+image. Drawn as a map (light = calm, dark = surprised):
 
 <p align="center">
-  <img src="lecture-05-a-vector-or-a-vocabulary/assets/fig_vocabulary.png" alt="All 512 visual words the model invented for CoinRun" width="95%">
+  <img src="lecture-06a-the-world-model-in-your-head/assets/fig_energy_contours_real.png" alt="Measured energy contours of five encoders" width="100%">
 </p>
 
-Nobody labelled any of those squares. The model learned them from raw frames, and a whole 64×64
-frame is rebuilt from just **16 of them** (held-out MSE 0.00081).
+The collapsed models are stripes — blind to the very axis that matters (they rank the true answer
+above an impostor at a coin-flip 0.500). I-JEPA digs the deepest well, centred on the truth:
+**0.9998**. And its space is organized by meaning — a goose's nearest neighbours are herons, while
+a pixel-trained model offers a gas mask and a cauliflower.
 
-Then the lecture opens the transformer and traces one real forward pass through every layer. The
-vector at the sampling position always has 256 numbers — but its similarity to the word it started
-as falls **1.00 → 0.20** on the way up. It stops being a word and becomes a summary of the whole
-window. That is what people mean by "the context vector".
-
-And you can **[steer the dream yourself](lecture-05-a-vector-or-a-vocabulary/simulator)** — 3,279
-real rollouts, both models, running offline from a single HTML file.
-
----
-
-## Running things locally
-
-Everything needs only `numpy`, `torch`, and `matplotlib`:
-
-```bash
-# Lecture 1 — partial observability made into a number (~1 second)
-python lecture-01-what-is-a-world-model/code/world_model_lecture1.py
-
-# Lecture 3 — the full MiniPong world model (~8 minutes on a laptop CPU)
-cd lecture-03-your-first-world-model/code && python pong_worldmodel.py
-```
-
-Every notebook also runs on a free Colab with no setup — the badges in each lecture's write-up
-open them directly.
-
----
-
-## About
-
-Created by **[Rajat Dandekar](https://www.youtube.com/@vizuara)** (Vizuara AI). The series is
-taught on the [Vizuara YouTube channel](https://www.youtube.com/@vizuara) — slides here are the
-exact decks used in the recordings, and the hand-drawn "whiteboard notebook" figures throughout
-are part of the series' visual language.
-
-If this helped you understand world models, a ⭐ on the repo helps others find it.
-
-*Reference: D. Ha & J. Schmidhuber, ["World Models"](https://arxiv.org/abs/1803.10122), 2018.*
+<p align="center">
+  <img src="lecture-06-stop-painting-pixels/assets/fig_neighbors.png" alt="Nearest neighbours: meaning vs texture" width="100%">
+</p>

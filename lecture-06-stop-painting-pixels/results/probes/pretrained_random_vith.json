@@ -1,0 +1,9 @@
+{
+  "model": "random_vith",
+  "dataset": "in100",
+  "linear_100pct": 0.17080000042915344,
+  "linear_10pct": 0.10480000078678131,
+  "linear_1pct": 0.04559999704360962,
+  "knn": 0.0772,
+  "feat_dim": 1280
+}

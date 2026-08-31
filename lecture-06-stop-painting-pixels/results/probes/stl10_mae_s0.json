@@ -1,0 +1,12 @@
+{
+  "ckpt": "/results/stl10_mae_s0/ckpt_final.pt",
+  "dataset": "stl10",
+  "random_init": false,
+  "linear_100pct": 0.752875030040741,
+  "linear_10pct": 0.6350000500679016,
+  "linear_1pct": 0.4791250228881836,
+  "knn": 0.611375,
+  "feat_dim": 384,
+  "n_train": 5000,
+  "n_test": 8000
+}

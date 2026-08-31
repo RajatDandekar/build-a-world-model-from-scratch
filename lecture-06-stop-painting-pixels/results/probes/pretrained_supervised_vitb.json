@@ -1,0 +1,9 @@
+{
+  "model": "supervised_vitb",
+  "dataset": "in100",
+  "linear_100pct": 0.914199948310852,
+  "linear_10pct": 0.9181999564170837,
+  "linear_1pct": 0.9107999801635742,
+  "knn": 0.9334,
+  "feat_dim": 768
+}

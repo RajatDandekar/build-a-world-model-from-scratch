@@ -1,0 +1,12 @@
+{
+  "ckpt": "/results/stl10_ijepa_s0/ckpt_final.pt",
+  "dataset": "stl10",
+  "random_init": true,
+  "linear_100pct": 0.41312500834465027,
+  "linear_10pct": 0.3270000219345093,
+  "linear_1pct": 0.20750001072883606,
+  "knn": 0.294375,
+  "feat_dim": 384,
+  "n_train": 5000,
+  "n_test": 8000
+}

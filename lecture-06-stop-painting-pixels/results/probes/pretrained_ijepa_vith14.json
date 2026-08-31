@@ -1,0 +1,9 @@
+{
+  "model": "ijepa_vith14",
+  "dataset": "in100",
+  "linear_100pct": 0.882599949836731,
+  "linear_10pct": 0.8613999485969543,
+  "linear_1pct": 0.771399974822998,
+  "knn": 0.8446,
+  "feat_dim": 1280
+}

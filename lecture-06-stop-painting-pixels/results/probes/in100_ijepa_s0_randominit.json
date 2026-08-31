@@ -1,0 +1,12 @@
+{
+  "ckpt": "/results/in100_ijepa_s0/ckpt_final.pt",
+  "dataset": "in100",
+  "random_init": true,
+  "linear_100pct": 0.18799999356269836,
+  "linear_10pct": 0.14180000126361847,
+  "linear_1pct": 0.06379999965429306,
+  "knn": 0.079,
+  "feat_dim": 384,
+  "n_train": 126689,
+  "n_test": 5000
+}
