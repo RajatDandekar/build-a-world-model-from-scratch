@@ -16,8 +16,16 @@ imagined final frame is closest to a goal image. Only the predictor is trained.
 | [`DINO_World_Model_From_Scratch.ipynb`](DINO_World_Model_From_Scratch.ipynb) | Every DINO-WM component from scratch on a small **Ball Arena** world: frozen DINOv2 encoder, action/proprio encoders, block-causal transformer predictor, optional decoder, and a CEM planner that reaches a goal image | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RajatDandekar/build-a-world-model-from-scratch/blob/main/lecture-10-dino-wm/DINO_World_Model_From_Scratch.ipynb) |
 | [`DINO_WM_PushT.ipynb`](DINO_WM_PushT.ipynb) | The same model on **real robot data**: 206 expert Push-T episodes from LeRobot, pre-encoded with DINOv2, next-frame prediction, autoregressive rollouts, and **zero-shot CEM planning** from a held-out start frame to a goal frame | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RajatDandekar/build-a-world-model-from-scratch/blob/main/lecture-10-dino-wm/DINO_WM_PushT.ipynb) |
 
-Both notebooks run top-to-bottom on a free Colab **T4**; the Push-T notebook takes about 70 minutes (most of it
-training the predictor for 30 epochs on 2,400 DINOv2-encoded frames).
+Both notebooks run top-to-bottom on a free Colab **T4**: the Ball Arena notebook in about 20 minutes (12 epochs
+with mixed precision), the Push-T notebook in about 70 minutes (most of it training the predictor for 30 epochs on
+2,400 DINOv2-encoded frames).
+
+**What the Ball Arena notebook produces:** after 12 epochs the predictor's feature loss is 0.048. Given only a start
+image and a goal image, CEM plans 5 actions entirely in DINOv2 feature space, and the *real* ball ends **1.3 px** from
+the goal (it started 110 px away). On 6 random start/goal pairs the real ball ends 2.2 px from the goal on average
+(start: 70 px; 5 random actions: 77 px), and all 6 land within 4 px.
+
+<p align="center"><img src="assets/ballarena_zero_shot_plan.png" alt="Zero-shot CEM plan on Ball Arena: real execution, world-model imagination, distance to goal" width="100%"></p>
 
 **What the Push-T notebook produces:** the predictor learns the dynamics (feature loss 1.16 → 0.14), and CEM —
 given only a start image and a goal image from a held-out episode — imagines a plan that drives the pusher straight
