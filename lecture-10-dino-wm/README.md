@@ -16,7 +16,16 @@ imagined final frame is closest to a goal image. Only the predictor is trained.
 | [`DINO_World_Model_From_Scratch.ipynb`](DINO_World_Model_From_Scratch.ipynb) | Every DINO-WM component from scratch on a small **Ball Arena** world: frozen DINOv2 encoder, action/proprio encoders, block-causal transformer predictor, optional decoder, and a CEM planner that reaches a goal image | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RajatDandekar/build-a-world-model-from-scratch/blob/main/lecture-10-dino-wm/DINO_World_Model_From_Scratch.ipynb) |
 | [`DINO_WM_PushT.ipynb`](DINO_WM_PushT.ipynb) | The same model on **real robot data**: 206 expert Push-T episodes from LeRobot, pre-encoded with DINOv2, next-frame prediction, autoregressive rollouts, and **zero-shot CEM planning** from a held-out start frame to a goal frame | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RajatDandekar/build-a-world-model-from-scratch/blob/main/lecture-10-dino-wm/DINO_WM_PushT.ipynb) |
 
-Both notebooks run top-to-bottom on a free Colab **T4** (runtimes are in the table at the bottom).
+Both notebooks run top-to-bottom on a free Colab **T4**; the Push-T notebook takes about 70 minutes (most of it
+training the predictor for 30 epochs on 2,400 DINOv2-encoded frames).
+
+**What the Push-T notebook produces:** the predictor learns the dynamics (feature loss 1.16 → 0.14), and CEM —
+given only a start image and a goal image from a held-out episode — imagines a plan that drives the pusher straight
+to the T and starts pushing it toward the target. Within its 8 imagined steps it does not finish the alignment the
+expert reaches in 57 frames, and the imagined T smears as it moves: an honest picture of zero-shot planning at
+notebook scale, and of why long-horizon rollouts are the hard part.
+
+<p align="center"><img src="assets/pusht_zero_shot_plan.png" alt="Zero-shot CEM plan in DINO feature space vs the expert" width="100%"></p>
 
 ## The ideas in the lecture
 
