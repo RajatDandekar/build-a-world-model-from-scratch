@@ -44,8 +44,14 @@ Each lecture folder holds its slides, its runnable code, and a README with the f
 | 5 | **A Vector, or a Vocabulary? — IRIS** | [**write-up**](lecture-05-a-vector-or-a-vocabulary) · [slides](lecture-05-a-vector-or-a-vocabulary/lecture-05.pdf) · [**play with it**](lecture-05-a-vector-or-a-vocabulary/simulator) | Discrete latents and transformers: give a world model a **vocabulary** instead of a vector, then open the transformer and trace one word through every layer |
 | 6a | **The World Model in Your Head** | [**write-up**](lecture-06a-the-world-model-in-your-head) · [slides](lecture-06a-the-world-model-in-your-head/lecture-06a.pdf) | LeCun's blueprint, made runnable: what an **energy landscape** is, and the measured contours that show why predicting in representation space wins |
 | 6 | **Stop Painting Pixels — I-JEPA** | [**write-up**](lecture-06-stop-painting-pixels) · [slides](lecture-06-stop-painting-pixels/lecture-06.pdf) · [code](lecture-06-stop-painting-pixels/code) | Build I-JEPA's ideas from scratch, watch **representation collapse** happen on purpose, and replicate the ImageNet study — including at 1% of labels |
+| 10 | **DINO-WM — Planning in Feature Space** | [**write-up**](lecture-10-dino-wm) · [notebook](lecture-10-dino-wm/DINO_World_Model_From_Scratch.ipynb) · [Push-T notebook](lecture-10-dino-wm/DINO_WM_PushT.ipynb) | Frozen DINOv2 features + a transformer predictor; plan a Push-T trajectory **zero-shot** with CEM in imagination |
+| 11 | **DIAMOND — Diffusion as a World Model** | [**write-up**](lecture-11-diamond) · [notebook](lecture-11-diamond/DIAMOND_World_Model_From_Scratch.ipynb) · [World Model Arena](https://github.com/RajatDandekar/world-model-arena) | Predict the next Atari frame by denoising pixels, train an agent in the dream — then race your own world model on the Arena leaderboard |
+| 12 | **V-JEPA 2 and V-JEPA 2-AC** | [**write-up**](lecture-12-vjepa2) · [notebook](lecture-12-vjepa2/VJEPA2_AC_Planning_SO101.ipynb) | Scale JEPA to 22M videos and 1B params — then **plan a real SO-101 arm** in frozen V-JEPA 2 feature space with an action-conditioned predictor and CEM |
+| 13 | **LeWorldModel — a JEPA on One GPU** | [**write-up + project**](lecture-13-leworldmodel) · [SO-101 converter](lecture-13-leworldmodel/project/convert_lerobot_to_h5.py) | A 15M-param end-to-end JEPA with the SIGReg loss; **train it on real SO-101 data** and plan with it |
+| 14 | **Video World Models — Imagine, then Act** | [**write-up**](lecture-14-video-world-models) · [notebook](lecture-14-video-world-models/Inverse_Dynamics_From_Video.ipynb) | UniPi, SuSIE, HiP, GR-1/2, VPP and π0.7 — then **train the inverse-dynamics interpreter** that reads SO-101 joint commands off video |
+| 15 | **World Action Models — DreamZero** | [**write-up + project**](lecture-15-dreamzero) · [DreamZero-SO101](https://vizuara-ai-lab.github.io/dreamzero-so101/) | One 14B model that dreams the video *and* the actions; our open fine-tune for the SO-101 arm |
 
-More on the way — next, world models that predict the future without rendering it (V-JEPA, DINO-WM).
+Lecture numbers 10–15 match the YouTube playlist. More on the way.
 
 ---
 

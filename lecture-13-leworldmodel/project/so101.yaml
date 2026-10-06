@@ -1,0 +1,15 @@
+# LeWorldModel data config for SO-101 — copy to le-wm/config/train/data/so101.yaml
+# Train with:  python train.py data=so101
+dataset:
+  num_steps: ${eval:'${num_preds} + ${history_size}'}
+  frameskip: 5          # SO-101 records at 30 Hz -> plan at 6 Hz; actions in a group are concatenated (6 x 5 = 30)
+  name: so101_pickplace_train.h5   # file under $STABLEWM_HOME/datasets/ (keep the .h5 suffix)
+  keys_to_load:
+    - pixels
+    - action
+    - proprio
+    - state
+  keys_to_cache:
+    - action
+    - proprio
+    - state
